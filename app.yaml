@@ -1,0 +1,8 @@
+runtime: nodejs20
+service: backend
+env: standard
+
+# Variabel lingkungan
+env_variables:
+  JWT_SECRET: "my_super_secret_key"
+  JWT_EXPIRES_IN: "1h"

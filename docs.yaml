@@ -6,8 +6,8 @@ info:
 servers:
   - url: http://localhost:8000
     description: Local development server
-  - url: http://localhost:4000
-    description: Local development server
+  - url: https://backend-dot-submission-mgce-rizkinugraha.et.r.appspot.com
+    description: Production server
 paths:
   /auth/register:
     post:
