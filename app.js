@@ -4,7 +4,7 @@ const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./docs.yaml');
 
 const app = express();
-const port = 3000;
+const port = 8000;
 const authRoutes = require('./routes/auth');
 
 // Middleware
