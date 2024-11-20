@@ -13,12 +13,13 @@ exports.userRegister = async (req, res) => {
         const userRef = db.collection('users').doc(username);
         const userDoc = await userRef.get();
 
-        // Check if the user already exists
         if (userDoc.exists) {
-            return res.status(400).send({ status: 'failed', message: 'Username already exists!' });
+            return res.status(400).send({ 
+                status: 'failed', 
+                message: 'Username already exists!' 
+            });
         }
 
-        // Save user to Firestore
         const hashedPassword = await bcrypt.hash(password, 10);
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
@@ -32,50 +33,74 @@ exports.userRegister = async (req, res) => {
             updatedAt
         });
 
-        return res.status(201).send({ status: 'succes', message: 'User registered successfully!' });
+        return res.status(201).send({ 
+            status: 'succes', 
+            message: 'User registered successfully!' 
+        });
     } catch (error) {
         console.error(error);
-        return res.status(500).send({ status: 'failed', message: 'Internal server error!' });
+        return res.status(500).send({ 
+            status: 'failed', 
+            message: 'Internal server error!' 
+        });
     }
 };
 
 // Login
 exports.userLogin = async (req, res) => {
-    const { username, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
 
     try {
-        // Retrieve user from Firestore
-        const userRef = db.collection('users').doc(username);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
+        let userRef;
+        let userDoc;
 
-        if (!userDoc.exists) {
-            return res.status(401).send({ status: 'failed', message: 'Username and password does not match!' });
+        // Periksa apakah input adalah email
+        if (usernameOrEmail.includes('@')) {
+            userRef = db.collection('users').where('email', '==', usernameOrEmail);
+        } else {
+            userRef = db.collection('users').where('username', '==', usernameOrEmail);
         }
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(password, userData.password);
+        // Ambil data user dari Firestore
+        const querySnapshot = await userRef.get();
+
+        if (querySnapshot.empty) {
+            return res.status(401).send({
+                status: 'failed',
+                message: 'Username or email and password do not match!',
+            });
+        }
+
+        // Ambil dokumen pertama (karena Firestore mengembalikan query snapshot)
+        userDoc = querySnapshot.docs[0].data();
+
+        // Verifikasi password
+        const isPasswordValid = await bcrypt.compare(password, userDoc.password);
 
         if (!isPasswordValid) {
-            return res.status(401).send({ status: 'failed', message: 'Username and password does not match!' });
+            return res.status(401).send({
+                status: 'failed',
+                message: 'Username or email and password do not match!',
+            });
         }
 
         // Generate JWT token
         const token = jwt.sign(
-            { username }, 
-            process.env.JWT_SECRET, 
+            { username: userDoc.username },
+            process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        return res.status(200).send(
-            {
-                status: 'succes',
-                message: 'Login successful!',
-                token
-            }
-        );
+        return res.status(200).send({
+            status: 'success',
+            message: 'Login successful!',
+            token,
+        });
     } catch (error) {
         console.error(error);
-        return res.status(500).send({ status: 'failed', message: 'Internal server error' });
+        return res.status(500).send({
+            status: 'failed',
+            message: 'Internal server error'
+        });
     }
 };
