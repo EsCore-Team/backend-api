@@ -20,11 +20,16 @@ exports.userRegister = async (req, res) => {
 
         // Save user to Firestore
         const hashedPassword = await bcrypt.hash(password, 10);
+        const createdAt = new Date().toISOString();
+        const updatedAt = createdAt;
+
         await userRef.set({
             fullName,
-            email,
             username,
+            email,
             password: hashedPassword,
+            createdAt,
+            updatedAt
         });
 
         return res.status(201).send({ status: 'succes', message: 'User registered successfully!' });
