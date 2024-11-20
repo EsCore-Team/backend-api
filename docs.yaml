@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:8000
     description: Local development server
-  - url: https://backend-dot-submission-mgce-rizkinugraha.et.r.appspot.com
+  - url: https://escore-app.et.r.appspot.com
     description: Production server
 paths:
   /auth/register:
@@ -21,19 +21,25 @@ paths:
             schema:
               type: object
               properties:
+                fullName:
+                  type: string
+                  example: Abdul Rojak
                 username:
                   type: string
-                  example: user123
+                  example: abdlrjk
+                email:
+                  type: string
+                  example: abdul123@gmail.com
                 password:
                   type: string
-                  example: secret123
+                  example: abdulgntg
       responses:
         '201':
-          description: User registered successfully
+          description: User registered successfully!
         '400':
-          description: User already exists
+          description: Username already exists!
         '500':
-          description: Internal server error
+          description: Internal server error!
 
   /auth/login:
     post:
