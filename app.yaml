@@ -1,5 +1,5 @@
 runtime: nodejs20
-service: backend
+service: default
 env: standard
 
 # Variabel lingkungan
