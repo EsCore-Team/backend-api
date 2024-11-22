@@ -100,7 +100,7 @@ exports.userLogin = async (req, res) => {
         console.error(error);
         return res.status(500).send({
             status: 'failed',
-            message: 'Internal server error'
+            message: 'Internal server error!'
         });
     }
 };

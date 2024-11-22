@@ -1,17 +1,17 @@
 openapi: 3.0.1
 info:
-  title: Authentication API
-  description: API for user authentication with register, login, and token validation.
+  title: Escore API Docs
+  description: API for support mobile app environtment and machine learning model.
   version: 1.0.0
 servers:
-  - url: http://localhost:8000
-    description: Local development server
   - url: https://escore-app.et.r.appspot.com
     description: Production server
+  - url: http://localhost:8000
+    description: Local server
 paths:
-  /auth/register:
+  /api/register:
     post:
-      summary: Register a new user
+      summary: User register
       tags:
         - Authentication
       requestBody:
@@ -36,14 +36,47 @@ paths:
       responses:
         '201':
           description: User registered successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User registered successfully!
         '400':
           description: Username already exists!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Username already exists!
         '500':
           description: Internal server error!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Internal server error!
 
-  /auth/login:
+  /api/login:
     post:
-      summary: Login a user
+      summary: User login
       tags:
         - Authentication
       requestBody:
@@ -53,30 +86,55 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                usernameOrEmail:
                   type: string
-                  example: user123
+                  example: abdlrjk
                 password:
                   type: string
-                  example: secret123
+                  example: abdulgntg
       responses:
         '200':
-          description: Login successful
+          description: Login successful!
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  status:
                     type: string
                     example: succes
+                  message:
+                    type: string
+                    example: Login successful!
                   token:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
         '401':
-          description: Invalid credentials
+          description: Username or email and password do not match!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Username or email and password do not match!
         '500':
-          description: Internal server error
+          description: Internal server error!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Internal server error!
 
 components:
   securitySchemes:
