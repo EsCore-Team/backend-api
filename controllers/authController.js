@@ -7,16 +7,16 @@ dotenv.config();
 const db = require('../services/firestore');
 
 exports.userRegister = async (req, res) => {
-    const { fullName, email, username, password } = req.body;
+    const { fullName, email, password } = req.body;
 
     try {
-        const userRef = db.collection('users').doc(username);
+        const userRef = db.collection('users').doc(email);
         const userDoc = await userRef.get();
 
         if (userDoc.exists) {
             return res.status(400).send({ 
                 status: 'failed', 
-                message: 'Username already exists!' 
+                message: 'Email already registered!' 
             });
         }
 
@@ -26,7 +26,6 @@ exports.userRegister = async (req, res) => {
 
         await userRef.set({
             fullName,
-            username,
             email,
             password: hashedPassword,
             createdAt,
@@ -46,47 +45,39 @@ exports.userRegister = async (req, res) => {
     }
 };
 
-// Login
 exports.userLogin = async (req, res) => {
-    const { usernameOrEmail, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        let userRef;
-        let userDoc;
+        const userRef = db.collection('users').doc(email);
+        const userDoc = await userRef.get();
+        console.log(userDoc);
 
         // Periksa apakah input adalah email
-        if (usernameOrEmail.includes('@')) {
-            userRef = db.collection('users').where('email', '==', usernameOrEmail);
-        } else {
-            userRef = db.collection('users').where('username', '==', usernameOrEmail);
-        }
-
-        // Ambil data user dari Firestore
-        const querySnapshot = await userRef.get();
-
-        if (querySnapshot.empty) {
-            return res.status(401).send({
-                status: 'failed',
-                message: 'Username or email and password do not match!',
+        if (!userDoc.exists) {
+            return res.status(400).send({ 
+                status: 'failed', 
+                message: 'Email and password do not match!' 
             });
         }
 
         // Ambil dokumen pertama (karena Firestore mengembalikan query snapshot)
-        userDoc = querySnapshot.docs[0].data();
+        const userData = userDoc.data();
+        console.log(userData);
 
         // Verifikasi password
-        const isPasswordValid = await bcrypt.compare(password, userDoc.password);
+        const isPasswordValid = await bcrypt.compare(password, userData.password);
 
         if (!isPasswordValid) {
             return res.status(401).send({
                 status: 'failed',
-                message: 'Username or email and password do not match!',
+                message: 'Email and password do not match!',
             });
         }
 
         // Generate JWT token
         const token = jwt.sign(
-            { username: userDoc.username },
+            { username: email },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );

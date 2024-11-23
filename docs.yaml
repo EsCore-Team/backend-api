@@ -24,9 +24,6 @@ paths:
                 fullName:
                   type: string
                   example: Abdul Rojak
-                username:
-                  type: string
-                  example: abdlrjk
                 email:
                   type: string
                   example: abdul123@gmail.com
@@ -48,7 +45,7 @@ paths:
                     type: string
                     example: User registered successfully!
         '400':
-          description: Username already exists!
+          description: Email already registered!
           content:
             application/json:
               schema:
@@ -86,9 +83,9 @@ paths:
             schema:
               type: object
               properties:
-                usernameOrEmail:
+                email:
                   type: string
-                  example: abdlrjk
+                  example: abdul@gmail.com
                 password:
                   type: string
                   example: abdulgntg
@@ -110,7 +107,7 @@ paths:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
         '401':
-          description: Username or email and password do not match!
+          description: Emmail and password do not match!
           content:
             application/json:
               schema:
@@ -121,7 +118,7 @@ paths:
                     example: failed
                   message:
                     type: string
-                    example: Username or email and password do not match!
+                    example: Email and password do not match!
         '500':
           description: Internal server error!
           content:
