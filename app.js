@@ -2,6 +2,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./docs.yaml');
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -10,7 +11,8 @@ const notesRoutes = require('./routes/notes');
 const authenticate = require('./middleware/authenticate');
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api', authRoutes);
 app.use('/api', notesRoutes);
