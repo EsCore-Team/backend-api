@@ -5,7 +5,6 @@ const swaggerDoc = YAML.load('./docs.yaml');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
 const authenticate = require('./middleware/authenticate');
@@ -18,6 +17,7 @@ app.use('/api', authRoutes);
 app.use('/api', notesRoutes);
 
 // Start Server
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
