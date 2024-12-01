@@ -34,6 +34,7 @@ exports.historyPredict = async (req, res) => {
         return res.status(200).send({
             error: false,
             message: 'History predictions retrieved successfully!',
+            email: email,
             predictions: predictions
         });
     } catch (error) {
