@@ -35,7 +35,7 @@ exports.historyPredict = async (req, res) => {
             error: false,
             message: 'History predictions retrieved successfully!',
             email: email,
-            predictions: predictions
+            predictions
         });
     } catch (error) {
         console.error(error);

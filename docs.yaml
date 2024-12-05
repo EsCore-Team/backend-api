@@ -11,7 +11,7 @@ servers:
 paths:
   /api/register:
     post:
-      summary: User register
+      summary: For user register
       tags:
         - Authentication
       requestBody:
@@ -38,25 +38,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    example: success
+                  error:
+                    type: boolean
+                    example: false
                   message:
                     type: string
-                    example: User registered successfully!
-        '400':
-          description: Email already registered!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Username already exists!
         '500':
           description: Internal server error!
           content:
@@ -64,16 +50,16 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    example: failed
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
-                    example: Internal server error!
+
 
   /api/login:
     post:
-      summary: User login
+      summary: For user login
       tags:
         - Authentication
       requestBody:
@@ -91,34 +77,28 @@ paths:
                   example: abdulgntg
       responses:
         '200':
-          description: Login successful!
+          description: Success logged in!
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    example: succes
+                  error:
+                    type: boolean
+                    example: false
                   message:
                     type: string
-                    example: Login successful!
-                  token:
-                    type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-        '401':
-          description: Emmail and password do not match!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Email and password do not match!
+                  loginResult:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      email:
+                        type: string
+                      fullName:
+                        type: string
+                      token:
+                        type: string
         '500':
           description: Internal server error!
           content:
@@ -126,12 +106,74 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    example: failed
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
-                    example: Internal server error!
+
+
+  /api/history/{email}:
+    get:
+      summary: For history predictions
+      tags:
+        - Model Prediction
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: History predictions retrieved successfully!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                  email:
+                    type: string
+                  predictions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        essay:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        predicted_result:
+                          type: object
+                          properties:
+                            score:
+                              type: string
+                            suggestion:
+                              type: string
+        '500':
+          description: Internal server error!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+
 
 # components:
 #   securitySchemes:

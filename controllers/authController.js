@@ -136,7 +136,7 @@ exports.userLogin = async (req, res) => {
 
         return res.status(200).send({
             error: false,
-            message: 'success',
+            message: 'Success logged in!',
             loginResult: {
                 userId: userData.id,
                 email: userData.email,

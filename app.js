@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const authRoutes = require('./routes/auth');
-const notesRoutes = require('./routes/notes');
 const authenticate = require('./middleware/authenticate');
 
 // Middleware
@@ -14,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api', authRoutes);
-app.use('/api', notesRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 8000;
