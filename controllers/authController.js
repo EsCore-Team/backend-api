@@ -42,7 +42,6 @@ exports.userRegister = async (req, res) => {
         const usersCollection = db.collection('users');
         const query = usersCollection.where('email', '==', email);
         const snapshot = await query.get();
-        console.log(snapshot.empty);
 
         if (!snapshot.empty) {
             return res.status(400).send({
